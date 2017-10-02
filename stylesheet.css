@@ -17,6 +17,11 @@ p {
     margin-top: 0px;
     margin-bottom: 0px;
 }
+
+p .gump {
+color: red;
+font-size: 12px;
+}
 .even{
     background-color: white;
     color: black;

@@ -88,7 +88,7 @@ echo '</table>';
  * @param array $arrToBeDeleted
  * @return bool
  */
-function updateCSV(array $arrToBeDeleted):bool{
+function removefromCSV(array $arrToBeDeleted):bool{
    
        $ToDos = fopen('todoliste.csv', 'r'); //Lesen-Modus
        $arrPreliminary; //vorläufiges Array mit den zu erhaltenden Einträgen
@@ -109,8 +109,6 @@ function updateCSV(array $arrToBeDeleted):bool{
                    $j++;
 
                }
-       
-   
        }
        else
        {
@@ -123,11 +121,41 @@ function updateCSV(array $arrToBeDeleted):bool{
            foreach($arrPreliminary As $value){
                fwrite($ToDos, $value);  //. "\r\n"    
            }
-           fclose($ToDos);  
+            
        }
+ 
+       fclose($ToDos);  
    return true;    
 }
 
+
+function insertintoCSV(string $newtodo):bool{
+
+$success = false;
+
+    if(strlen($newtodo)>0){
+        if (count(getTodos('todoliste.csv'))===0){
+            $lastId = -1;
+        }
+        else
+        {
+            $lastId = getTodos('todoliste.csv')[count(getTodos('todoliste.csv'))-1][0];
+        }
+
+                // neuen Eintrag in die Datei 'todoliste.csv' schreiben.
+                $file = fopen('todoliste.csv', 'a');
+                if ($file !== false){
+                    $newId = $lastId + 1;
+                    fwrite($file,  $newId . ";" . date('d.m.Y H:i:s') . ';' . trim($newtodo) . "\r\n");
+                    fclose($file);
+                }
+        
+   }
+
+$success = true;   
+return $success;
+
+}
 
 
 ?>

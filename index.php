@@ -2,8 +2,8 @@
 <?php
 
 session_start();
-var_dump($_COOKIE);
-var_dump($_SESSION);
+//var_dump($_COOKIE);
+//var_dump($_SESSION);
 
 $_SESSION['somedata'] = 'merkdirdas';
 
@@ -11,7 +11,7 @@ $_SESSION['somedata'] = 'merkdirdas';
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -48,34 +48,74 @@ $_SESSION['somedata'] = 'merkdirdas';
                 //renderTable($filePath, ";", true, $headers=['del', 'id', 'Datum/Uhrzeit', 'Aufgabe'], $widths=['8%', '8%', '28%', '56%']);
                 require_once("src/func.php");
                 require_once("src/data.php");
+                require_once("../GUMP-master/gump.class.php");
+                
+
+
+                //G U M P - Validation, nur nachdem gepostet wurde!
+                /*
+                if(count($_POST)>0){
+
+                $gump = new Gump('de');
+                
+                $gump->validation_rules(array(
+                    'newtodo' => 'required|alpha_numeric|max_len,100|min_len,6'
+                ));
+                    
+                    $validated_data = $gump->run($_POST);
+                    
+                                    if($validated_data === false) {
+                                        echo $gump->get_readable_errors(true);
+                                    } else {
+                                        print_r($validated_data); // validation successful
+                                    }
+                    
+                }
+                */
             
                 //Prüfen ob einzelne Zeilen gecheckt sind, d.h. erledigt sind, d.h. zu löschen sind
                 if(count($_POST)>0){
                     
-                    if(array_key_exists('doneYesNo', $_POST)){
-                        $dyn = $_POST['doneYesNo']; 
-                            //rebuild here...
-                        if(array_key_exists('sourcetx', $_POST)){
-                            updateCSV($dyn);       
-                        }
-                        elseif(array_key_exists('sourcedb', $_POST)){
-                            updateTable($dyn);
-                        }
-                    }
-                }
+                    if(array_key_exists('doneYesNo', $_POST)){   
+                            $dyn = $_POST['doneYesNo'];  
 
+                            if(array_key_exists('datasource', $_POST)){
+                                if($_POST['datasource'] = 'sourcetx'){
+                                    removefromCSV($dyn);  
+                                }
+                                elseif($_POST['datasource'] = 'sourcedb'){
+                                    removefromDB($dyn);
+                                }   
+                            }     
+                    }
+
+                    if(array_key_exists('newtodo', $_POST)){
+
+                        if(array_key_exists('datasource', $_POST)){
+                            if($_POST['datasource'] = 'sourcetx'){
+                                insertintoCSV($_POST['newtodo']);  
+                            }
+                            elseif($_POST['datasource'] = 'sourcedb'){
+                                //ist noch nicht implementiert?
+                                //updateTable($_POST['newtodo']);
+                            }   
+                        }
+
+                    }
+ 
+                }    
 
                 //Hier wird entschieden, ob eine Textdatei oder die Datenbank als Datenquelle verwendet werden soll...
                 
                 if(isset($_POST['datasource'])){
                     if($_POST['datasource']==='sourcedb'){
                         $rows = getData();
-                        $_SESSION['datasource'] = 'sourcedb';
+                        //$_SESSION['datasource'] = 'sourcedb';
                         renderTable($rows);                       
                     }
                     elseif($_POST['datasource']==='sourcetx'){
                         $rows = getTodos('todoliste.csv');
-                        $_SESSION['datasource'] = 'sourcetx';
+                        //$_SESSION['datasource'] = 'sourcetx';
                         renderTable($rows);                        
                     }
                 }                                     
