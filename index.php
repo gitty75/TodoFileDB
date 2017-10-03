@@ -50,8 +50,6 @@ $_SESSION['somedata'] = 'merkdirdas';
                 require_once("src/data.php");
                 require_once("../GUMP-master/gump.class.php");
                 
-
-
                 //G U M P - Validation, nur nachdem gepostet wurde!
                 /*
                 if(count($_POST)>0){
@@ -80,10 +78,10 @@ $_SESSION['somedata'] = 'merkdirdas';
                             $dyn = $_POST['doneYesNo'];  
 
                             if(array_key_exists('datasource', $_POST)){
-                                if($_POST['datasource'] = 'sourcetx'){
+                                if($_POST['datasource'] === 'sourcetx'){
                                     removefromCSV($dyn);  
                                 }
-                                elseif($_POST['datasource'] = 'sourcedb'){
+                                elseif($_POST['datasource'] === 'sourcedb'){
                                     removefromDB($dyn);
                                 }   
                             }     
@@ -92,12 +90,12 @@ $_SESSION['somedata'] = 'merkdirdas';
                     if(array_key_exists('newtodo', $_POST)){
 
                         if(array_key_exists('datasource', $_POST)){
-                            if($_POST['datasource'] = 'sourcetx'){
+                            if($_POST['datasource'] === 'sourcetx'){
                                 insertintoCSV($_POST['newtodo']);  
                             }
-                            elseif($_POST['datasource'] = 'sourcedb'){
+                            elseif($_POST['datasource'] === 'sourcedb'){
                                 //ist noch nicht implementiert?
-                                //updateTable($_POST['newtodo']);
+                                //insertintoTable($_POST['newtodo']);
                             }   
                         }
 
@@ -114,7 +112,7 @@ $_SESSION['somedata'] = 'merkdirdas';
                         renderTable($rows);                       
                     }
                     elseif($_POST['datasource']==='sourcetx'){
-                        $rows = getTodos('todoliste.csv');
+                         $rows = getTodos('todoliste.csv');
                         //$_SESSION['datasource'] = 'sourcetx';
                         renderTable($rows);                        
                     }

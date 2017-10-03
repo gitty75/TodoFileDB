@@ -128,6 +128,39 @@ function removefromCSV(array $arrToBeDeleted):bool{
    return true;    
 }
 
+function removefromDB(array $arrToBeDeleted):bool{
+
+$dbuser = 'root'; 
+$pass = '';
+
+$success = false;
+
+$dbh = new PDO('mysql:host=localhost;dbname=todo', $dbuser, $pass);
+
+    try{
+        foreach($arrToBeDeleted As $key => $value){
+
+            $todoid = substr($value, strlen($value)-1, 1);
+            $strSQL = "Delete from TODOS where todo_id = $todoid;";
+            $dbh->exec($strSQL);
+        }
+
+    echo '<p>successful deletion</p>';    
+    $dbh = null;
+    $success = true;
+    return $success;
+
+    }
+    catch (PDOException $e) {
+        print "Error!: " . $e->getMessage() . "<br/>";
+        //die() - Bricht das Script ab und gibt davor noch die angegebene Meldung aus.
+        $dbh = null;
+        $success = false;
+        return $success;
+        die();
+    }    
+
+}
 
 function insertintoCSV(string $newtodo):bool{
 
